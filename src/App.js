@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { memo, useCallback, useState } from "react";
 import styles from "./app.module.css";
 
-export const Field = ({ name, label, value, onChange }) => {
+export const Field = memo(({ name, label, value, onChange }) => {
 	console.log(name);
 	return (
 		<label>
@@ -14,7 +14,7 @@ export const Field = ({ name, label, value, onChange }) => {
 			/>
 		</label>
 	);
-};
+});
 
 export const App = () => {
 	console.log("--------------App---------------");
@@ -22,15 +22,21 @@ export const App = () => {
 	const [degree, setDegree] = useState(0);
 	const [result, setResult] = useState(0);
 
-	const onNumChange = ({ target }) => {
-		setNum(Number(target.value));
-		setResult(Math.pow(Number(target.value), degree));
-	};
+	const onNumChange = useCallback(
+		({ target }) => {
+			setNum(Number(target.value));
+			setResult(Math.pow(Number(target.value), degree));
+		},
+		[degree],
+	);
 
-	const onDegreeChange = ({ target }) => {
-		setDegree(Number(target.value));
-		setResult(Math.pow(num, Number(target.value)));
-	};
+	const onDegreeChange = useCallback(
+		({ target }) => {
+			setDegree(Number(target.value));
+			setResult(Math.pow(num, Number(target.value)));
+		},
+		[num],
+	);
 
 	return (
 		<div className={styles.App}>
