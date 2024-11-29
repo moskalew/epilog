@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from "react";
+import { memo, useMemo, useCallback, useState } from "react";
 import styles from "./app.module.css";
 
 export const Field = memo(({ name, label, value, onChange }) => {
@@ -20,23 +20,23 @@ export const App = () => {
 	console.log("--------------App---------------");
 	const [num, setNum] = useState(0);
 	const [degree, setDegree] = useState(0);
-	const [result, setResult] = useState(0);
 
-	const onNumChange = useCallback(
-		({ target }) => {
+	const onNumChange = useMemo(() => {
+		return ({ target }) => {
 			setNum(Number(target.value));
-			setResult(Math.pow(Number(target.value), degree));
-		},
-		[degree],
-	);
+		};
+	}, []);
 
-	const onDegreeChange = useCallback(
-		({ target }) => {
-			setDegree(Number(target.value));
-			setResult(Math.pow(num, Number(target.value)));
-		},
+	const onDegreeChange = useCallback(({ target }) => {
+		setDegree(Number(target.value));
+	}, []);
+
+	const hardCalculatedNum = useMemo(
+		() => new Array(20000000).fill(0).reduce((res, el) => res + el, num),
 		[num],
 	);
+
+	const result = Math.pow(hardCalculatedNum, degree);
 
 	return (
 		<div className={styles.App}>
